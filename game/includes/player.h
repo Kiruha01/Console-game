@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "obj.h"
 
 class Player : public Obj
@@ -58,6 +59,23 @@ public:
 
     }
 
+    void jump()
+    {
+        if (!isjumping)
+        {
+            isjumping = true;
+            
+        }
+    }
+
+    void fall()
+    {
+        if (counter == 0)
+            ++getY();
+        counter = (++counter) % 3;
+
+    }
+
     // Получить кадр анимации
     wchar_t get_animation(int x, int y)
     {
@@ -66,10 +84,56 @@ public:
             return animation[0][y][x];
         else
             return animation[(counter_of_animation / 10) + 1][y][x];
-    };
+    }
+    // 0 - down, 1 - up, 2 - left, 3 - right
+    bool checkCollision(std::vector<Obj*> objs, int direction = 0)
+    {
+        // Костыль: ПРыгаем
+        if ((isjumping) && (counter < 10))
+        {
+            --getY();
+            ++counter;
+        }
+        else
+        {
+            isjumping = false;
+            counter = 0;
+        }
+
+
+        bool isColl = false;
+        for (int i = 0; i < objs.size(); ++i)
+        {
+            if (isColl) break;
+            Obj* o = objs[i];
+            switch (direction)
+            {
+            case 0:
+                if ((isjumping)||((getY() + h) == o->getY()) && (getX() + getWidth() > o->getX()) && (o->getX() + o->getWidth() > getX()))
+                {
+                    isColl = true;
+                }
+                else
+                {
+                    isColl = false;
+                }
+                break;
+            case 1:
+                if (((getY() + h) == o->getY()) && (getX() + getWidth() > o->getX()) && (o->getX() + o->getWidth() > getX()))
+                    isColl = true;
+                else
+                    isColl = false;
+            default:
+                isColl = false;
+                break;
+            }
+        }
+        return isColl;
+    }
 
 private:
     bool isjumping = false; // Прыгает ли человек сейчас
+    int counter = 0; //счетчик для замедления подения и прыжка
 
     //wchar_t*** animation;// 0 - stop; 1 - 1st step; 2 - 2nd step
 };

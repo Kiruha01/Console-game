@@ -6,6 +6,7 @@
 #include "player.h"
 #include "floor.h"
 using namespace std;
+
 int nScreenWidth = 120; // Ширина консольного окна
 int nScreenHeight = 30; // Высота консольного окна
 
@@ -15,7 +16,11 @@ HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NUL
 
 DWORD dwBytesWritten = 0; // Для дебага
 
+ /*
+    TODO:
+    исправить прыжок
 
+    */
 
 //=====================================DRAW===============================================
 
@@ -53,16 +58,27 @@ void draw(vector<Obj*> objects)//отрисовка
 
 int main()
 {
-    Player p;
-    Floor f(10, 26);
-
+    Player p(10,10);
     vector<Obj*> objs;
+    for (size_t i = 0; i < 20; i++)
+    {
+        Floor* t = new Floor(10 + i * 3, 26);
+        objs.push_back(t);
+    }
+    Floor f(13, 24);
     objs.push_back(&p);
     objs.push_back(&f);
-    
+
     while (1) {
         Sleep(10);
+        
+        if (!p.checkCollision(objs, 0))
+        {
+            p.fall();
+        }
 
+        if (p.getY() >= nScreenHeight-2)
+            exit(0);
 
         if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
         {
@@ -74,23 +90,24 @@ int main()
             if (p.getX() < 120) ++p.getX();
             p.incCounterAnim();
         }
-        else if (GetAsyncKeyState((unsigned short)' ') & 0x8000) // Клавишей "W" идём вперёд
-        {
-        //    if (p.getY() > 0) --p.getY();
-        //    p.incCounterAnim();
-        //}
-        //else if (GetAsyncKeyState((unsigned short)'S') & 0x8000) // Клавишей "S" идём назад
-        //{
-        //    if (p.getY() < 30) ++p.getY();
-        //    p.incCounterAnim();
-        }
         else
         {
             p.resetCounterAnim();
         }
 
+        if (GetAsyncKeyState((unsigned short)' ') & 0x8000) // Клавишей "W" прыгаем
+        {
+            if (p.getY() > 0) p.jump();
+        }
+        //else if (GetAsyncKeyState((unsigned short)'S') & 0x8000) // Клавишей "S" идём назад
+        //{
+        //    if (p.getY() < 30) ++p.getY();
+        //    p.incCounterAnim();
+        //}
+
+
         draw(objs);
     }
 
-    
+
 }

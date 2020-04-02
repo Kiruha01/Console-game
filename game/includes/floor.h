@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "obj.h"
 
 class Floor : public Obj
@@ -12,7 +12,7 @@ public:
         {
             for (size_t y = 0; y < w; y++)
             {
-                animation[0][x][y] = '!';
+                animation[0][x][y] = '#';
             }
         }
 
