@@ -60,7 +60,7 @@ int main()
 {
     Player p(10,10);
     vector<Obj*> objs;
-    for (size_t i = 0; i < 20; i++)
+    for (size_t i = 0; i < 35; i++)
     {
         Floor* t = new Floor(10 + i * 3, 26);
         objs.push_back(t);
@@ -70,9 +70,9 @@ int main()
     objs.push_back(&f);
 
     while (1) {
-        Sleep(10);
-        
-        if (!p.checkCollision(objs, 0))
+        Sleep(20);
+        bool collisionDn = p.checkCollision(objs, 0);
+        if (!collisionDn)
         {
             p.fall();
         }
@@ -97,7 +97,7 @@ int main()
 
         if (GetAsyncKeyState((unsigned short)' ') & 0x8000) // Клавишей "W" прыгаем
         {
-            if (p.getY() > 0) p.jump();
+            if (collisionDn) p.jump();
         }
         //else if (GetAsyncKeyState((unsigned short)'S') & 0x8000) // Клавишей "S" идём назад
         //{

@@ -89,7 +89,7 @@ public:
     bool checkCollision(std::vector<Obj*> objs, int direction = 0)
     {
         // Костыль: ПРыгаем
-        if ((isjumping) && (counter < 10))
+        if ((isjumping) && (counter < 5))
         {
             --getY();
             ++counter;
