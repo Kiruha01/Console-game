@@ -202,7 +202,7 @@ DWORD dwBytesWritten = 0; // Для дебага
 
 //=====================================DRAW===============================================
 
-void draw(Player* pl, Obj* a)//отрисовка
+void draw(vector<Obj*> objects)//отрисовка
 {
     SetConsoleActiveScreenBuffer(hConsole); // Настройка консоли
 
@@ -214,22 +214,16 @@ void draw(Player* pl, Obj* a)//отрисовка
         }
     }
 
-    for (int y = 0; y < pl->getHeight(); y++)
+    for (Obj* a : objects)
     {
-        for (int x = 0; x < pl->getWidth(); x++)
+        for (int y = 0; y < a->getHeight(); y++)
         {
-            screen[(pl->getY() + y)* nScreenWidth + x + pl->getX()] = pl->get_animation(x, y);
+            for (int x = 0; x < a->getWidth(); x++)
+            {
+                screen[(a->getY() + y) * nScreenWidth + x + a->getX()] = a->get_animation(x, y);
+            }
         }
     }
-
-    for (int y = 0; y < a->getHeight(); y++)
-    {
-        for (int x = 0; x < a->getWidth(); x++)
-        {
-            screen[(a->getY() + y) * nScreenWidth + x + a->getX()] = a->get_animation(x, y);
-        }
-    }
-
 
     screen[nScreenWidth * nScreenHeight] = '\0'; 
     WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth * nScreenHeight, { 0, 0 }, &dwBytesWritten);
@@ -243,7 +237,11 @@ void draw(Player* pl, Obj* a)//отрисовка
 int main()
 {
     Player p;
+    Floor f(10, 26);
 
+    vector<Obj*> objs;
+    objs.push_back(&p);
+    objs.push_back(&f);
     
     while (1) {
         Sleep(10);
@@ -274,7 +272,7 @@ int main()
             p.resetCounterAnim();
         }
 
-        draw(&p, &f);
+        draw(objs);
     }
 
     
