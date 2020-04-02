@@ -21,11 +21,6 @@
   <ItemGroup>
     <ClCompile Include="src\game.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="includes\floor.h" />
-    <ClInclude Include="includes\obj.h" />
-    <ClInclude Include="includes\player.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{801CC115-C27B-480D-890C-36C51FB46AAA}</ProjectGuid>
@@ -112,7 +107,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
