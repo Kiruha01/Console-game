@@ -88,17 +88,7 @@ public:
     // 0 - down, 1 - up, 2 - left, 3 - right
     bool checkCollision(std::vector<Obj*> objs, int direction = 0)
     {
-        // Костыль: ПРыгаем
-        if ((isjumping) && (counter < 5))
-        {
-            --getY();
-            ++counter;
-        }
-        else
-        {
-            isjumping = false;
-            counter = 0;
-        }
+ 
 
 
         bool isColl = false;
@@ -109,26 +99,46 @@ public:
             switch (direction)
             {
             case 0:
-                if ((isjumping)||((getY() + h) == o->getY()) && (getX() + getWidth() > o->getX()) && (o->getX() + o->getWidth() > getX()))
+                // Костыль: ПРыгаем
+                if ((isjumping) && (counter < 7) && (!checkCollision(objs, 1)))
                 {
-                    isColl = true;
+                    --getY();
+                    ++counter;
                 }
                 else
                 {
-                    isColl = false;
+                    isjumping = false;
+                    counter = 0;
+                }
+
+                if ((isjumping) || ((getY() + h) == o->getY()) && (getX() + getWidth() > o->getX()) && (o->getX() + o->getWidth() > getX()))
+                {
+                    isColl = true;
                 }
                 break;
             case 1:
-                if (((getY() + h) == o->getY()) && (getX() + getWidth() > o->getX()) && (o->getX() + o->getWidth() > getX()))
+                if ((getY() == o->getY() + o->getHeight()) && (getX() + getWidth() > o->getX()) && (o->getX() + o->getWidth() > getX()))
                     isColl = true;
-                else
-                    isColl = false;
+            case 2:
+                if ((o->getX() + o->getWidth() == getX()) && (o->getY() + o->getHeight() > getY()) && (o->getY() < getY() + getHeight()))
+                    isColl = true;
+                break;
+            case 3:
+                if ((o->getX()  == getX() + getWidth()) && (o->getY() + o->getHeight() > getY()) && (o->getY() < getY() + getHeight()))
+                    isColl = true;
+                break;
             default:
                 isColl = false;
                 break;
             }
         }
         return isColl;
+    }
+
+
+    void move()
+    {
+
     }
 
 private:

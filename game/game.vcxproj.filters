@@ -29,5 +29,8 @@
     <ClInclude Include="includes\floor.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="includes\room.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@
 #include "obj.h"
 #include "player.h"
 #include "floor.h"
+#include "room.h"
 using namespace std;
 
 int nScreenWidth = 120; // Ширина консольного окна
@@ -24,7 +25,7 @@ DWORD dwBytesWritten = 0; // Для дебага
 
 //=====================================DRAW===============================================
 
-void draw(vector<Obj*> objects)//отрисовка
+void draw(Player* p, vector<Obj*> objects)//отрисовка
 {
     SetConsoleActiveScreenBuffer(hConsole); // Настройка консоли
 
@@ -47,6 +48,14 @@ void draw(vector<Obj*> objects)//отрисовка
         }
     }
 
+    for (int y = 0; y < p->getHeight(); y++)
+    {
+        for (int x = 0; x < p->getWidth(); x++)
+        {
+            screen[(p->getY() + y) * nScreenWidth + x + p->getX()] = p->get_animation(x, y);
+        }
+    }
+
     screen[nScreenWidth * nScreenHeight] = '\0'; 
     WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth * nScreenHeight, { 0, 0 }, &dwBytesWritten);
 }
@@ -59,19 +68,11 @@ void draw(vector<Obj*> objects)//отрисовка
 int main()
 {
     Player p(10,10);
-    vector<Obj*> objs;
-    for (size_t i = 0; i < 35; i++)
-    {
-        Floor* t = new Floor(10 + i * 3, 26);
-        objs.push_back(t);
-    }
-    Floor f(13, 24);
-    objs.push_back(&p);
-    objs.push_back(&f);
+    MainRoom mr(&p);
 
     while (1) {
         Sleep(20);
-        bool collisionDn = p.checkCollision(objs, 0);
+        bool collisionDn = p.checkCollision(mr.allobj, 0);
         if (!collisionDn)
         {
             p.fall();
@@ -82,12 +83,12 @@ int main()
 
         if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
         {
-            if (p.getX() > 0) --p.getX();
+            if ((p.getX() > 0) && !p.checkCollision(mr.allobj, 2)) --p.getX();
             p.incCounterAnim();
         }
         else if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
         {
-            if (p.getX() < 120) ++p.getX();
+            if ((p.getX() < 120-3) && !p.checkCollision(mr.allobj, 3)) ++p.getX();
             p.incCounterAnim();
         }
         else
@@ -106,7 +107,7 @@ int main()
         //}
 
 
-        draw(objs);
+        draw(&p, mr.allobj);
     }
 
 

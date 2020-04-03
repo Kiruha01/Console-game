@@ -25,6 +25,7 @@
     <ClInclude Include="includes\floor.h" />
     <ClInclude Include="includes\obj.h" />
     <ClInclude Include="includes\player.h" />
+    <ClInclude Include="includes\room.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
