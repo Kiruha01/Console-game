@@ -68,7 +68,7 @@ void draw(Player* p, vector<Obj*> objects)//отрисовка
 int main()
 {
     Player p(10,10);
-    MainRoom mr(&p);
+    SecondRoom mr(&p);
 
     while (1) {
         Sleep(20);

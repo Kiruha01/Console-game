@@ -2,6 +2,7 @@
 #include "obj.h"
 #include "player.h"
 #include "floor.h"
+#include "door.h"
 #include <vector>
 
 class Room
@@ -54,6 +55,23 @@ public:
 		createWall(107, 10, 26);
 		createFloor(2, 50, 19);
 		createFloor(56, 110, 19);
+		Door* d = new Door(106, 22);
+		allobj.push_back(d);
+		p->getX() = 5;
+		p->getY() = 23;
+	}
+};
+
+class SecondRoom : public Room
+{
+public:
+	SecondRoom(Player* player, int W = 120, int H = 30) : Room(player, W, H)
+	{
+		createFloor(2, 110, 26);
+		createWall(2, 10, 26);
+		createWall(107, 10, 26);
+		Door* d = new Door(2, 22);
+		allobj.push_back(d);
 		p->getX() = 5;
 		p->getY() = 23;
 	}

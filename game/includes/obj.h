@@ -17,11 +17,11 @@ public:
             animation[0][i] = new wchar_t[3];
         }
         counter_of_animation = 0;
-        for (size_t x = 0; x < h; x++)
+        for (size_t y = 0; y < h; y++)
         {
-            for (size_t y = 0; y < w; y++)
+            for (size_t x = 0; x < w; x++)
             {
-                animation[0][x][y] = '#';
+                animation[0][y][x] = '#';
             }
         }
     };

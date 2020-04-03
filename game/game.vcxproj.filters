@@ -32,5 +32,8 @@
     <ClInclude Include="includes\room.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="includes\door.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

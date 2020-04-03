@@ -15,7 +15,10 @@ public:
                 animation[0][x][y] = '#';
             }
         }
-
+    }
+    wchar_t get_animation(int x, int y)
+    {
+        return animation[0][y][x];
     }
 
 private:
