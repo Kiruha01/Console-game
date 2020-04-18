@@ -2,6 +2,15 @@
 
 class Obj
 {
+
+    /*
+
+    Ô____ - x,y - anchor point
+    |   |
+    |   |
+    |___|
+ 
+ */
    
 public:
     Obj(int _x = 60, int _y = 25)

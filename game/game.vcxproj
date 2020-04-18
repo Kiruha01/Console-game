@@ -22,7 +22,6 @@
     <ClCompile Include="src\game.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="includes\door.h" />
     <ClInclude Include="includes\floor.h" />
     <ClInclude Include="includes\obj.h" />
     <ClInclude Include="includes\player.h" />

@@ -25,7 +25,7 @@ DWORD dwBytesWritten = 0; // Для дебага
 
 //=====================================DRAW===============================================
 
-void draw(Player* p, vector<Obj*> objects)//отрисовка
+void draw(Room* r)//отрисовка
 {
     SetConsoleActiveScreenBuffer(hConsole); // Настройка консоли
 
@@ -37,7 +37,7 @@ void draw(Player* p, vector<Obj*> objects)//отрисовка
         }
     }
 
-    for (Obj* a : objects)
+    for (Obj* a : r->getDrawObjs())
     {
         for (int y = 0; y < a->getHeight(); y++)
         {
@@ -48,11 +48,11 @@ void draw(Player* p, vector<Obj*> objects)//отрисовка
         }
     }
 
-    for (int y = 0; y < p->getHeight(); y++)
+    for (int y = 0; y < r->getPl()->getHeight(); y++)
     {
-        for (int x = 0; x < p->getWidth(); x++)
+        for (int x = 0; x < r->getPl()->getWidth(); x++)
         {
-            screen[(p->getY() + y) * nScreenWidth + x + p->getX()] = p->get_animation(x, y);
+            screen[(r->getPl()->getY() + y) * nScreenWidth + x + r->getPl()->getX()] = r->getPl()->get_animation(x, y);
         }
     }
 
@@ -68,11 +68,19 @@ void draw(Player* p, vector<Obj*> objects)//отрисовка
 int main()
 {
     Player p(10,10);
-    SecondRoom mr(&p);
+    MainRoom mr(&p);
+    SecondRoom sr(&p);
+
+    mr.toSec->setRef((sr.toMain), 4, 0);
+    sr.toMain->setRef(mr.toSec, -4, 0);
+
+    Room* currentRoom = &mr;
+
 
     while (1) {
+        draw(currentRoom);
         Sleep(20);
-        bool collisionDn = p.checkCollision(mr.allobj, 0);
+        bool collisionDn = p.checkCollision(currentRoom->getCollObjs(), 0);
         if (!collisionDn)
         {
             p.fall();
@@ -83,12 +91,30 @@ int main()
 
         if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
         {
-            if ((p.getX() > 0) && !p.checkCollision(mr.allobj, 2)) --p.getX();
+            if ((p.getX() > 0) && !p.checkCollision(currentRoom->getCollObjs(), 2))
+            {
+                --p.getX();
+                Room::Door* curDoor = currentRoom->checkCollWithDoors();
+                if (curDoor)
+                {
+                    currentRoom = curDoor->toref();
+                    continue;
+                }
+            }
             p.incCounterAnim();
         }
         else if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
         {
-            if ((p.getX() < 120-3) && !p.checkCollision(mr.allobj, 3)) ++p.getX();
+            if ((p.getX() < 120 - 3) && !p.checkCollision(currentRoom->getCollObjs(), 3))
+            {
+                ++p.getX();
+                Room::Door* curDoor = currentRoom->checkCollWithDoors();
+                if (curDoor)
+                {
+                    currentRoom = curDoor->toref();
+                    continue;
+                }
+            }
             p.incCounterAnim();
         }
         else
@@ -96,18 +122,13 @@ int main()
             p.resetCounterAnim();
         }
 
-        if (GetAsyncKeyState((unsigned short)' ') & 0x8000) // Клавишей "W" прыгаем
+        if (GetAsyncKeyState((unsigned short)' ') & 0x8000) // Клавишей " " прыгаем
         {
             if (collisionDn) p.jump();
         }
-        //else if (GetAsyncKeyState((unsigned short)'S') & 0x8000) // Клавишей "S" идём назад
-        //{
-        //    if (p.getY() < 30) ++p.getY();
-        //    p.incCounterAnim();
-        //}
 
 
-        draw(&p, mr.allobj);
+
     }
 
 
