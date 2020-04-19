@@ -3,6 +3,7 @@
 #include "player.h"
 #include "floor.h"
 #include <vector>
+#include "button.h"
 
 class Room
 {
@@ -137,7 +138,9 @@ public:
 		createWall(107, 10, 26);
 		createFloor(2, 50, 19);
 		createFloor(56, 110, 19);
+		Button* but = new Button(5, 23);
 
+		allobj.push_back(but);
 		toSec = new Door(106, 22, this);
 		allobj.push_back(toSec);
 		p->getX() = 5;

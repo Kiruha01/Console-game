@@ -43,7 +43,8 @@ void draw(Room* r)//отрисовка
         {
             for (int x = 0; x < a->getWidth(); x++)
             {
-                screen[(a->getY() + y) * nScreenWidth + x + a->getX()] = a->get_animation(x, y);
+                if (a->get_animation(x, y) != ' ')
+                    screen[(a->getY() + y) * nScreenWidth + x + a->getX()] = a->get_animation(x, y);
             }
         }
     }
@@ -52,7 +53,8 @@ void draw(Room* r)//отрисовка
     {
         for (int x = 0; x < r->getPl()->getWidth(); x++)
         {
-            screen[(r->getPl()->getY() + y) * nScreenWidth + x + r->getPl()->getX()] = r->getPl()->get_animation(x, y);
+            if (r->getPl()->get_animation(x, y) != ' ')
+                screen[(r->getPl()->getY() + y) * nScreenWidth + x + r->getPl()->getX()] = r->getPl()->get_animation(x, y);
         }
     }
 
@@ -127,9 +129,6 @@ int main()
             if (collisionDn) p.jump();
         }
 
-
-
     }
-
 
 }
