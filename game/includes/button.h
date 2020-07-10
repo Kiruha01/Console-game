@@ -6,8 +6,8 @@ class Button: public Obj
 public:
 	Button(int x = 25, int y=10) : Obj(x, y)
 	{
-		h = 1;
-		w = 2;
+		setHeight(1);
+		setWidth(2);
 		animation = new wchar_t** [2];
 		for (size_t i = 0; i < 2; i++)
 		{

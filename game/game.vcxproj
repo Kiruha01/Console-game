@@ -19,7 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\floor.cpp" />
     <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\obj.cpp" />
+    <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\room.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\button.h" />
