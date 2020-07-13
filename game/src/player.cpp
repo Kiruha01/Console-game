@@ -1,4 +1,5 @@
 #include "player.h"
+#define HIGHTofJUMPING 8
 
 Player::Player(int _x, int _y) : Obj(_x, _y)
 {
@@ -81,7 +82,7 @@ wchar_t Player::get_animation(int x, int y)
 }
 
 // 0 - down, 1 - up, 2 - left, 3 - right
-bool Player::checkCollision(std::vector<Obj*> objs, int direction)
+bool Player::checkCollision(std::vector<Obj*> objs, Direct direction)
 {
     bool isColl = false;
     for (int i = 0; i < objs.size(); ++i)
@@ -90,9 +91,9 @@ bool Player::checkCollision(std::vector<Obj*> objs, int direction)
         Obj* o = objs[i];
         switch (direction)
         {
-        case 0:
+        case DOWN:
             // Костыль: ПРыгаем
-            if ((isjumping) && (counter < 7) && (!checkCollision(objs, 1)))
+            if ((isjumping) && (counter < HIGHTofJUMPING) && (!checkCollision(objs, UP)))
             {
                 --y;
                 ++counter;
@@ -108,14 +109,14 @@ bool Player::checkCollision(std::vector<Obj*> objs, int direction)
                 isColl = true;
             }
             break;
-        case 1:
+        case UP:
             if ((y == o->y + o->getHeight()) && (x + getWidth() > o->x) && (o->x + o->getWidth() > x))
                 isColl = true;
-        case 2:
+        case LEFT:
             if ((o->x + o->getWidth() == x) && (o->y + o->getHeight() > y) && (o->y < y + getHeight()))
                 isColl = true;
             break;
-        case 3:
+        case RIGHT:
             if ((o->x == x + getWidth()) && (o->y + o->getHeight() > y) && (o->y < y + getHeight()))
                 isColl = true;
             break;

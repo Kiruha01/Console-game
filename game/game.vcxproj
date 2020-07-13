@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\button.cpp" />
     <ClCompile Include="src\floor.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\obj.cpp" />

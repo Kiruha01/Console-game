@@ -19,7 +19,7 @@ DWORD dwBytesWritten = 0; // Для дебага
 
  /*
     TODO:
-    поместить все проеделения в cpp
+
     обернуть в пространство имён
     функции для создания комнат
     Ну и, собственно, ДВЕРИ!
@@ -69,24 +69,43 @@ void draw(Room* r)//отрисовка
 //=====================================!DRAW!===============================================
 
 
+Room* createRooms(Player* pl)
+{
+    Room* mr = new Room(pl);
+    mr->createFloor(2, 110, 26);
+    mr->createWall(2, 10, 26);
+    mr->createWall(107, 10, 26);
+    mr->createFloor(2, 45, 19);
+    mr->createFloor(56, 110, 19);
+    Room::Door* door_fromMain_toSecond = mr->createDoor(106, 15);
+
+    Room* sr = new Room(pl);
+    sr->createFloor(2, 110, 26);
+    sr->createWall(2, 10, 26);
+    sr->createWall(107, 10, 26);
+    Room::Door* door_fromSecond_toMain = sr->createDoor(2, 22);
+
+    door_fromMain_toSecond->setRef(door_fromSecond_toMain, 5, 0);
+    door_fromSecond_toMain->setRef(door_fromMain_toSecond, -5, 0);
+
+
+
+    return mr;
+}
+
 
 int main()
 {
     Player p(10,10);
-    Room mr(&p);
-    mr.createFloor(2, 110, 26);
-    mr.createWall(2, 10, 26);
-    mr.createWall(107, 10, 26);
-    mr.createFloor(2, 50, 19);
-    mr.createFloor(56, 110, 19);
+    Room* mr = createRooms(&p);
 
-    Room* currentRoom = &mr;
+    Room* currentRoom = mr;
 
 
     while (1) {
         draw(currentRoom);
         Sleep(20);
-        bool collisionDn = p.checkCollision(currentRoom->getCollObjs(), 0);
+        bool collisionDn = p.checkCollision(currentRoom->getCollObjs(), DOWN);
         if (!collisionDn)
         {
             p.fall();
@@ -97,29 +116,29 @@ int main()
 
         if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
         {
-            if ((p.x > 0) && !p.checkCollision(currentRoom->getCollObjs(), 2))
+            if ((p.x > 0) && !p.checkCollision(currentRoom->getCollObjs(), LEFT))
             {
                 --p.x;
-               /* Room::Door* curDoor = currentRoom->checkCollWithDoors();
+                Room::Door* curDoor = currentRoom->checkCollWithDoors();
                 if (curDoor)
                 {
                     currentRoom = curDoor->toref();
                     continue;
-                }*/
+                }
             }
             p.incCounterAnim();
         }
         else if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
         {
-            if ((p.x < 120 - 3) && !p.checkCollision(currentRoom->getCollObjs(), 3))
+            if ((p.x < 120 - 3) && !p.checkCollision(currentRoom->getCollObjs(), RIGHT))
             {
                 ++p.x;
-                /*Room::Door* curDoor = currentRoom->checkCollWithDoors();
+                Room::Door* curDoor = currentRoom->checkCollWithDoors();
                 if (curDoor)
                 {
                     currentRoom = curDoor->toref();
                     continue;
-                }*/
+                }
             }
             p.incCounterAnim();
         }

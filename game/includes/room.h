@@ -9,61 +9,21 @@ class Room
 {
 public:
 	Room(Player* player, int W = 120, int H = 30);
-	
 
 	class Door : public Obj
 	{
 	public:
-		Door(int x, int y, Room* thisrm) : Obj(x, y)
-		{
-			thisroom = thisrm;
-			setWidth(4);
-			setHeight(4);
-			animation = new wchar_t** [1];
-			animation[0] = new wchar_t* [getHeight()];
-			for (size_t i = 0; i < getHeight(); i++)
-			{
-				animation[0][i] = new wchar_t[getWidth()];
-				animation[0][i][0] = '[';
-				animation[0][i][1] = '_';
-				animation[0][i][2] = '_';
-				animation[0][i][3] = ']';
-			}
-		}
+		Door(int x, int y, Room* thisrm);
 
-		bool checkCollwithPlayer(Player* p)
-		{
-			if ((p->x + p->getWidth() >= x) && (p->x <= x + getWidth()))
-				if ((p->y + p->getHeight() >= y) && p->y <= y + getHeight())
-					return true;
-			return false;
-		}
+		// true - если игрок перекрывает эту дверь, false - иначе
+		bool checkCollwithPlayer(Player* p);
+		wchar_t get_animation(int x, int y);
+		Room* getCurrentRoom() const;
 
-		wchar_t get_animation(int x, int y)
-		{
-			return animation[0][y][x];
-		}
+		// «адать св€занную дверь перехода и смещение игрока отностительно двери
+		void setRef(Door* r, int x_offset, int y_offset);
 
-		Room* getRoom() const
-		{
-			return thisroom;
-		}
-
-		// «адать дверь комнаты перехода и смещение игрока отностительно двери
-		void setRef(Door* r, int x_offset, int y_offset)
-		{
-			offset_x = x_offset;
-			offset_y = y_offset;
-			refdoor = r;
-			return;
-		}
-
-		Room* toref()
-		{
-			refdoor->getRoom()->getPlayer()->x = refdoor->x + offset_x;
-			refdoor->getRoom()->getPlayer()->y = refdoor->y + offset_y;
-			return refdoor->getRoom();
-		}
+		Room* toref();
 	private:
 		Door* refdoor = nullptr;
 		int offset_x = 0;
@@ -73,24 +33,26 @@ public:
 	};
 
 	// ѕроверка со столкновением с двер€ми. в случае столкновени€ возращает нужную дверь
-	//virtual Door* checkCollWithDoors() = 0;
+	Door* checkCollWithDoors();
 
 
 	// —оздаЄт пол на нужной высоте заданной длины
 	void createFloor(int start_x, int end_x, int y);
-
 	void createWall(int x, int start_y, int end_y);
+	Door* createDoor(int x, int y);
+
+	void addObj(Obj* obj);
+	void addDrawObj(Obj* obj);
 
 	Player* getPlayer();
-	
 	std::vector<Obj*> getDrawObjs();
-
 	std::vector<Obj*> getCollObjs();
 
 protected:
 	Player* p;
 	std::vector<Obj*> allobj; // ќтрисовка
 	std::vector<Obj*> collobj; // —толкновени€
+	std::vector<Door*> doors;
 
 private:
 	int nScreenWidth; // Ўирина
