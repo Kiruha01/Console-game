@@ -4,9 +4,22 @@
 class Floor : public Obj
 {
 public:
-    Floor(int x = 60, int y = 25);
-
-    wchar_t get_animation(int x, int y);
+    Floor(int _x = 60, int _y = 25) : Obj(_x, _y)
+    {
+        w = 3;
+        h = 2;
+        for (size_t x = 0; x < h; x++)
+        {
+            for (size_t y = 0; y < w; y++)
+            {
+                animation[0][x][y] = '#';
+            }
+        }
+    }
+    wchar_t get_animation(int x, int y)
+    {
+        return animation[0][y][x];
+    }
 
 private:
     //wchar_t animation;
