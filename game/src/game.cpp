@@ -19,7 +19,10 @@ DWORD dwBytesWritten = 0; // Для дебага
 
  /*
     TODO:
-    исправить прыжок
+
+    обернуть в пространство имён
+    функции для создания комнат
+    Ну и, собственно, ДВЕРИ!
 
     */
 
@@ -44,17 +47,17 @@ void draw(Room* r)//отрисовка
             for (int x = 0; x < a->getWidth(); x++)
             {
                 if (a->get_animation(x, y) != ' ')
-                    screen[(a->getY() + y) * nScreenWidth + x + a->getX()] = a->get_animation(x, y);
+                    screen[(a->y + y) * nScreenWidth + x + a->x] = a->get_animation(x, y);
             }
         }
     }
 
-    for (int y = 0; y < r->getPl()->getHeight(); y++)
+    for (int y = 0; y < r->getPlayer()->getHeight(); y++)
     {
-        for (int x = 0; x < r->getPl()->getWidth(); x++)
+        for (int x = 0; x < r->getPlayer()->getWidth(); x++)
         {
-            if (r->getPl()->get_animation(x, y) != ' ')
-                screen[(r->getPl()->getY() + y) * nScreenWidth + x + r->getPl()->getX()] = r->getPl()->get_animation(x, y);
+            if (r->getPlayer()->get_animation(x, y) != ' ')
+                screen[(r->getPlayer()->y + y) * nScreenWidth + x + r->getPlayer()->x] = r->getPlayer()->get_animation(x, y);
         }
     }
 
@@ -66,36 +69,56 @@ void draw(Room* r)//отрисовка
 //=====================================!DRAW!===============================================
 
 
+Room* createRooms(Player* pl)
+{
+    Room* mr = new Room(pl);
+    mr->createFloor(2, 110, 26);
+    mr->createWall(2, 10, 26);
+    mr->createWall(107, 10, 26);
+    mr->createFloor(2, 45, 19);
+    mr->createFloor(56, 110, 19);
+    Room::Door* door_fromMain_toSecond = mr->createDoor(106, 15);
+
+    Room* sr = new Room(pl);
+    sr->createFloor(2, 110, 26);
+    sr->createWall(2, 10, 26);
+    sr->createWall(107, 10, 26);
+    Room::Door* door_fromSecond_toMain = sr->createDoor(2, 22);
+
+    door_fromMain_toSecond->setRef(door_fromSecond_toMain, 5, 0);
+    door_fromSecond_toMain->setRef(door_fromMain_toSecond, -5, 0);
+
+
+
+    return mr;
+}
+
 
 int main()
 {
     Player p(10,10);
-    MainRoom mr(&p);
-    SecondRoom sr(&p);
+    Room* mr = createRooms(&p);
 
-    mr.toSec->setRef((sr.toMain), 4, 0);
-    sr.toMain->setRef(mr.toSec, -4, 0);
-
-    Room* currentRoom = &mr;
+    Room* currentRoom = mr;
 
 
     while (1) {
         draw(currentRoom);
         Sleep(20);
-        bool collisionDn = p.checkCollision(currentRoom->getCollObjs(), 0);
+        bool collisionDn = p.checkCollision(currentRoom->getCollObjs(), DOWN);
         if (!collisionDn)
         {
             p.fall();
         }
 
-        if (p.getY() >= nScreenHeight-2)
+        if (p.y >= nScreenHeight-2)
             exit(0);
 
         if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
         {
-            if ((p.getX() > 0) && !p.checkCollision(currentRoom->getCollObjs(), 2))
+            if ((p.x > 0) && !p.checkCollision(currentRoom->getCollObjs(), LEFT))
             {
-                --p.getX();
+                --p.x;
                 Room::Door* curDoor = currentRoom->checkCollWithDoors();
                 if (curDoor)
                 {
@@ -107,9 +130,9 @@ int main()
         }
         else if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
         {
-            if ((p.getX() < 120 - 3) && !p.checkCollision(currentRoom->getCollObjs(), 3))
+            if ((p.x < 120 - 3) && !p.checkCollision(currentRoom->getCollObjs(), RIGHT))
             {
-                ++p.getX();
+                ++p.x;
                 Room::Door* curDoor = currentRoom->checkCollWithDoors();
                 if (curDoor)
                 {
