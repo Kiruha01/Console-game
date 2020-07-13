@@ -25,6 +25,4 @@ public:
 private:
     bool isjumping = false; // Прыгает ли человек сейчас
     int counter = 0; //счетчик для замедления подения и прыжка
-
-    //wchar_t*** animation;// 0 - stop; 1 - 1st step; 2 - 2nd step
 };
